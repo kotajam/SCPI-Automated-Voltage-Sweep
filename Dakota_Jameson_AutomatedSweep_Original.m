@@ -1,4 +1,4 @@
-%% Completed by Dakota Jameson, PUID: 0036638739, 2k7 Section 006 (Nicole Wang)
+%% Completed by Dakota Jameson
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Resetting the instruments
@@ -7,11 +7,9 @@ instrreset;
 dmm = visa('keysight', 'USB0::0x2A8D::0x8E01::CN63470074::0::INSTR'); % Creating a VISA object
 fopen(dmm); % Opening the connection to the DMM
 
-%% Code for 11.3, "Manual" Voltage Sweep from 0.5 to 5 Volts
+%% Code for Voltage Sweep from 0.5 to 5 Volts
 
-% For this project, I thought it would be cool if I wrote a program that could simutaneously control the power supply with the DMM (essentially meaning that I could create a for loop that iterates every loop by increasing the voltage by 0.5 volts, essentially giving us a very fast, automated sweep)
-
-power_supply = visa('keysight', 'USB0::0x2A8D::0x8F01::CN63420410::0::INSTR'); % Since connection is needed to both the power supply and the DMM for an automated voltage control, we need to repeat the steps we did with the DMM in order to connect to the power supply
+power_supply = visa('keysight', 'USB0::0x2A8D::0x8F01::CN63420410::0::INSTR'); % Since the connection is needed to both the power supply and the DMM for automated voltage control, we need to repeat the steps we did with the DMM to connect to the power supply
 fopen(power_supply); % Opening the connection to the power supply
 
 int i; % Loop control variable
@@ -19,9 +17,9 @@ int voltage_array; % Voltage array created to store the values of the voltages e
 int current_array; % Current array with the same function as the voltage array
 voltage_array = []; % Declaring the variable as an array
 current_array = [];
-int counter; % Counter variable used in the array in order to store elements in different spots in the array so the valaues aren't constantly overwriting each other
+int counter; % Counter variable used in the array to store elements in different spots in the array so the values aren't constantly overwriting each other
 
-for i = 0:0.5:5 % Loop variable starts at 0, increments by 0.5, and stops at 5. We can use this format in MATLAB in order to avoid counter variables and other things that aren't necessary
+for i = 0:0.5:5 % Loop variable starts at 0, increments by 0.5, and stops at 5. We can use this format in MATLAB to avoid counter variables and other things that aren't necessary
     for counter = 0:0.5:5
         fprintf(power_supply, sprintf('VOLTAGE %f', i)); % Setting our initial voltage
         fprintf(power_supply, 'VOLTAGE OUTPUT ON'); % Turning on the connection between the output of the power supply and the DMM
@@ -29,7 +27,7 @@ for i = 0:0.5:5 % Loop variable starts at 0, increments by 0.5, and stops at 5. 
         voltage_value = str2double(fscanf(dmm)); % Requesting the value from the DMM and storing it in the computer as a double
         voltage_array = [counter, voltage_value]; % Assigning the value to a voltage array. We are going to need this later for calculations. 
         fprintf(dmm, 'MEASURE:CURR? AUTO,MAX'); % Asking the DMM what the measure current read is. Again, we will stay consistent, only asking for the max value observed for that voltage value
-        current_value = str2double(fscanf(dmm)); % Requesting the value of the current and storing it as a double, like we did with the voltage
+        current_value = str2double(fscanf(dmm)); % Requesting the value of the current and storing it as a double like we did with the voltage
         current_array = [counter, current_value]; % Assigning the value to a current array.
         disp(['Measurement_Result:,' voltage_value]); % displaying the value of the voltage to the command window
         disp(['Measurement_Result:,' current_value]); % displaying the value of the associated current to the command window
@@ -56,7 +54,7 @@ ylabel('Measured Current (A)')
 % 11.5 Comparing the values of resistance the calculating the percent error
 
 expected_resistance = 1000; % The value of the expected resistance is 1000 ohms
-measured_resistance = voltage_array(5) / current_array(5); % The measured resistance can be calculated by reworking ohm's law to get R = V / I. We chose to extract the values of voltage at spot "5" in the array because that is when it theoretically is at it's highest. We decided to extract current at spot 5 as well because when voltage increases, so does current
+measured_resistance = voltage_array(5) / current_array(5); % The measured resistance can be calculated by reworking ohm's law to get R = V / I. We chose to extract the values of voltage at spot "5" in the array because that is when it theoretically is at its highest. We decided to extract current at spot 5 as well because when voltage increases, so does the current
 
 percent_error = ((measured_resistance - expected_resistance) / (expected_resistance)) * 100; % Percent error formula
 
@@ -67,7 +65,7 @@ fclose(dmm); % Closing the connection to the DMM
 
 % 11.6 Measurements in range
 
-if measured_resistance <= 1050 && measured_resistance >= 950 % 1050 ohms is our ceiling an 950 ohms our floor because the resistor has a tolerance of +-5%, which is 50 ohms 
+if measured_resistance <= 1050 && measured_resistance >= 950 % 1050 ohms is our ceiling and 950 ohms is our floor because the resistor has a tolerance of +-5%, which is 50 ohms 
     fprintf('The resistance falls within range')
 else
     fprintf('The resistance does not fall within range')
