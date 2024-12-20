@@ -1,6 +1,6 @@
 %% Automated Voltage Sweep and Resistance Verification
 %% Created by: Dakota Jameson
-%% Date: 12/08/2024
+%% Date: 12/8/2024
 
 % Reset instruments 
 instrreset;
