@@ -11,7 +11,7 @@ fprintf(dmm, 'MEASURE:VOLT:DC? AUTO,MAX');
 volt = str2double(fscanf(dmm));
 
 % Displaying the measured values
-disp(['Measurement_Result:,' measurement]);
+disp(['Measurement_Results:,' measurement]);
 
 % Closing the connection
 fclose(dmm);
